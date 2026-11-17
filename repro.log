@@ -1,0 +1,93 @@
+
+[notice] A new release of pip is available: 25.2 -> 26.2.1
+[notice] To update, run: ./.venv/bin/python3 -m pip install --upgrade pip
+[repro] venv ready
+  eastern-ok: buildings
+  eastern-ok: places
+  eastern-ok: (1192, 238)
+  maricopa-az: buildings
+  maricopa-az: places
+  maricopa-az: (1593, 238)
+  northern-ca: buildings
+  northern-ca: places
+  northern-ca: (591, 238)
+  south-central-tx: buildings
+  south-central-tx: places
+  south-central-tx: (6010, 238)
+  eastern-wa: buildings
+  eastern-wa: places
+  eastern-wa: (415, 238)
+[run_all] features.py done in 264 s
+  eastern-ok: roads (1192, 63)
+  maricopa-az: roads (1593, 64)
+  northern-ca: roads (591, 49)
+  south-central-tx: roads (6001, 89)
+  eastern-wa: roads (415, 59)
+[run_all] roads.py done in 540 s
+  eastern-ok: zip (6015, 3) bsize (1192, 5)
+  maricopa-az: zip (7922, 3) bsize (1593, 5)
+  northern-ca: zip (2788, 3) bsize (591, 5)
+  south-central-tx: zip (32460, 3) bsize (6001, 5)
+  eastern-wa: zip (1937, 3) bsize (415, 5)
+[run_all] zips.py done in 217 s
+./src/model.py:322: PerformanceWarning: DataFrame is highly fragmented.  This is usually the result of calling `frame.insert` many times, which has poor performance.  Consider joining all columns at once using pd.concat(axis=1) instead. To get a de-fragmented frame, use `newframe = frame.copy()`
+  tot = f.assign(poi=poi, pop=pop).groupby("region")[["poi", "pop"]].transform("sum")
+./src/model.py:322: PerformanceWarning: DataFrame is highly fragmented.  This is usually the result of calling `frame.insert` many times, which has poor performance.  Consider joining all columns at once using pd.concat(axis=1) instead. To get a de-fragmented frame, use `newframe = frame.copy()`
+  tot = f.assign(poi=poi, pop=pop).groupby("region")[["poi", "pop"]].transform("sum")
+./src/model.py:378: Pandas4Warning: Starting with pandas version 4.0 all arguments of sum will be keyword-only.
+  assert np.allclose(out[["s_T", "s_B", "s_F", "s_C"]].sum(1), out["coverage_gap_score"])
+./src/../submissions/v2b.csv
+                  coverage_gap_score     s_T     s_B     s_F     s_C  any_undef
+region                                                                         
+eastern-ok                    0.0835  0.0487  0.0000  0.0250  0.0098     0.2102
+eastern-wa                    0.0558  0.0157  0.0000  0.0232  0.0168     0.2195
+maricopa-az                   0.0681  0.0133  0.0065  0.0243  0.0241     0.5423
+northern-ca                   0.0599  0.0140  0.0028  0.0246  0.0186     0.3651
+south-central-tx              0.0534  0.0132  0.0033  0.0236  0.0134     0.2763
+[run_all] model.py done in 17 s
+./src/model.py:322: PerformanceWarning: DataFrame is highly fragmented.  This is usually the result of calling `frame.insert` many times, which has poor performance.  Consider joining all columns at once using pd.concat(axis=1) instead. To get a de-fragmented frame, use `newframe = frame.copy()`
+  tot = f.assign(poi=poi, pop=pop).groupby("region")[["poi", "pop"]].transform("sum")
+./src/model.py:322: PerformanceWarning: DataFrame is highly fragmented.  This is usually the result of calling `frame.insert` many times, which has poor performance.  Consider joining all columns at once using pd.concat(axis=1) instead. To get a de-fragmented frame, use `newframe = frame.copy()`
+  tot = f.assign(poi=poi, pop=pop).groupby("region")[["poi", "pop"]].transform("sum")
+./src/model.py:378: Pandas4Warning: Starting with pandas version 4.0 all arguments of sum will be keyword-only.
+  assert np.allclose(out[["s_T", "s_B", "s_F", "s_C"]].sum(1), out["coverage_gap_score"])
+./src/../submissions/v3b.csv
+                  coverage_gap_score     s_T     s_B     s_F     s_C  any_undef
+region                                                                         
+eastern-ok                    0.0827  0.0489  0.0000  0.0235  0.0103     0.2103
+eastern-wa                    0.0554  0.0161  0.0001  0.0219  0.0173     0.2197
+maricopa-az                   0.0677  0.0134  0.0068  0.0228  0.0247     0.5423
+northern-ca                   0.0592  0.0142  0.0031  0.0228  0.0192     0.3648
+south-central-tx              0.0536  0.0138  0.0035  0.0223  0.0139     0.2748
+[run_all] model.py done in 18 s
+./src/model.py:322: PerformanceWarning: DataFrame is highly fragmented.  This is usually the result of calling `frame.insert` many times, which has poor performance.  Consider joining all columns at once using pd.concat(axis=1) instead. To get a de-fragmented frame, use `newframe = frame.copy()`
+  tot = f.assign(poi=poi, pop=pop).groupby("region")[["poi", "pop"]].transform("sum")
+./src/model.py:322: PerformanceWarning: DataFrame is highly fragmented.  This is usually the result of calling `frame.insert` many times, which has poor performance.  Consider joining all columns at once using pd.concat(axis=1) instead. To get a de-fragmented frame, use `newframe = frame.copy()`
+  tot = f.assign(poi=poi, pop=pop).groupby("region")[["poi", "pop"]].transform("sum")
+./src/model.py:378: Pandas4Warning: Starting with pandas version 4.0 all arguments of sum will be keyword-only.
+  assert np.allclose(out[["s_T", "s_B", "s_F", "s_C"]].sum(1), out["coverage_gap_score"])
+./src/../submissions/v3d.csv
+                  coverage_gap_score     s_T     s_B     s_F     s_C  any_undef
+region                                                                         
+eastern-ok                    0.0794  0.0487  0.0000  0.0250  0.0057     0.2102
+eastern-wa                    0.0488  0.0157  0.0000  0.0232  0.0098     0.2195
+maricopa-az                   0.0585  0.0133  0.0065  0.0243  0.0144     0.5424
+northern-ca                   0.0520  0.0140  0.0028  0.0246  0.0107     0.3651
+south-central-tx              0.0477  0.0132  0.0033  0.0236  0.0077     0.2763
+[run_all] model.py done in 17 s
+./src/model.py:322: PerformanceWarning: DataFrame is highly fragmented.  This is usually the result of calling `frame.insert` many times, which has poor performance.  Consider joining all columns at once using pd.concat(axis=1) instead. To get a de-fragmented frame, use `newframe = frame.copy()`
+  tot = f.assign(poi=poi, pop=pop).groupby("region")[["poi", "pop"]].transform("sum")
+./src/model.py:322: PerformanceWarning: DataFrame is highly fragmented.  This is usually the result of calling `frame.insert` many times, which has poor performance.  Consider joining all columns at once using pd.concat(axis=1) instead. To get a de-fragmented frame, use `newframe = frame.copy()`
+  tot = f.assign(poi=poi, pop=pop).groupby("region")[["poi", "pop"]].transform("sum")
+./src/model.py:378: Pandas4Warning: Starting with pandas version 4.0 all arguments of sum will be keyword-only.
+  assert np.allclose(out[["s_T", "s_B", "s_F", "s_C"]].sum(1), out["coverage_gap_score"])
+./src/../submissions/v3e.csv
+                  coverage_gap_score     s_T     s_B     s_F     s_C  any_undef
+region                                                                         
+eastern-ok                    0.0689  0.0340  0.0000  0.0250  0.0098     0.2171
+eastern-wa                    0.0558  0.0157  0.0000  0.0232  0.0168     0.2195
+maricopa-az                   0.0681  0.0133  0.0065  0.0243  0.0241     0.5423
+northern-ca                   0.0599  0.0140  0.0028  0.0246  0.0186     0.3651
+south-central-tx              0.0534  0.0132  0.0033  0.0236  0.0134     0.2763
+[run_all] model.py done in 17 s
+[repro] TOTAL 1090.15 s

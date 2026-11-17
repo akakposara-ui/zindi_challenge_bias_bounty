@@ -1,0 +1,480 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>The Track Gap</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Overpass:wght@400;600;700;800&family=Overpass+Mono:wght@400;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<style>
+/* Layout: one 68ch reading column; evidence blocks (charts, tables) run wider. Road-sign type
+   (Overpass, from Highway Gothic) carries structure and data; a text serif carries the prose. */
+:root {
+  --paper: #fbfbf9;
+  --ink: #16181d;
+  --ink-2: #4a4f59;
+  --muted: #7a7f88;
+  --rule: #e2e3df;
+  --panel: #f1f2ee;
+  --accent: #1d5b86;
+  --mark: #fff1b8;
+  --series-1: #2a78d6;
+  --series-2: #eb6834;
+  --grid: #e1e0d9;
+  --axis: #c3c2b7;
+  --tip-bg: #16181d;
+  --tip-fg: #f4f4f1;
+  --font-display: "Overpass", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-body: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --font-mono: "Overpass Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --step--1: 0.84rem;
+  --step-0: 1.04rem;
+  --step-1: 1.25rem;
+  --step-2: 1.6rem;
+  --step-3: 2.6rem;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #121417; --ink: #eceae6; --ink-2: #c4c2ba; --muted: #8f8d86; --rule: #2a2d32;
+    --panel: #1b1e22; --accent: #84b6de; --mark: #4a3f12; --series-1: #3987e5; --series-2: #d95926;
+    --grid: #2c2c2a; --axis: #383835; --tip-bg: #eceae6; --tip-fg: #16181d; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #121417; --ink: #eceae6; --ink-2: #c4c2ba; --muted: #8f8d86; --rule: #2a2d32;
+  --panel: #1b1e22; --accent: #84b6de; --mark: #4a3f12; --series-1: #3987e5; --series-2: #d95926;
+  --grid: #2c2c2a; --axis: #383835; --tip-bg: #eceae6; --tip-fg: #16181d; color-scheme: dark;
+}
+body { background: var(--paper); color: var(--ink); font-family: var(--font-body); font-size: var(--step-0); line-height: 1.6; }
+.page { max-width: 980px; margin: 0 auto; padding-block: 40px 72px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.prose { max-width: 68ch; }
+h1, h2, h3, .eyebrow, .tile-value, th, .meta, nav, figcaption .ftitle, .pill { font-family: var(--font-display); }
+h1 { font-size: var(--step-3); line-height: 1.05; font-weight: 800; letter-spacing: -0.01em; margin: 6px 0 14px; text-wrap: balance; }
+h2 { font-size: var(--step-2); font-weight: 700; line-height: 1.2; margin: 0 0 12px; text-wrap: balance; }
+h3 { font-size: var(--step-1); font-weight: 700; line-height: 1.3; margin: 28px 0 8px; text-wrap: balance; }
+.eyebrow { font-size: var(--step--1); font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); }
+p { margin: 0 0 14px; }
+a { color: var(--accent); text-underline-offset: 2px; }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+code, .mono { font-family: var(--font-mono); font-size: 0.9em; }
+code { background: var(--panel); padding: 1px 5px; border-radius: 4px; }
+.dek { font-size: var(--step-1); color: var(--ink-2); max-width: 60ch; line-height: 1.45; margin-bottom: 18px; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 22px; font-size: var(--step--1); color: var(--ink-2); padding-block: 12px; border-block: 1px solid var(--rule); }
+.meta b { color: var(--ink); font-weight: 600; }
+.fill-in { background: var(--mark); padding: 0 4px; border-radius: 3px; color: var(--ink); }
+nav { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 8px 28px; margin: 22px 0 8px; font-size: var(--step--1); }
+nav ol { margin: 4px 0 0; padding-left: 18px; color: var(--ink-2); }
+nav a { text-decoration: none; }
+section.part { margin-top: 56px; padding-top: 20px; border-top: 2px solid var(--ink); }
+.part-label { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 4px; }
+.pill { font-size: 0.74rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; border: 1px solid var(--rule); border-radius: 999px; padding: 2px 10px; color: var(--ink-2); }
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin: 18px 0 26px; }
+.tile { background: var(--panel); border-radius: 8px; padding: 14px 16px 16px; display: flex; flex-direction: column; gap: 4px; }
+.tile-value { font-size: 2.1rem; font-weight: 700; line-height: 1.1; }
+.tile-label { font-size: 0.95rem; color: var(--ink-2); line-height: 1.4; }
+figure { margin: 22px 0 26px; }
+figcaption { font-size: var(--step--1); color: var(--ink-2); max-width: 68ch; margin-top: 6px; }
+figcaption .ftitle { display: block; font-size: 1rem; font-weight: 700; color: var(--ink); margin-bottom: 2px; }
+.chart { position: relative; width: 100%; }
+.chart svg { display: block; width: 100%; height: auto; overflow: visible; }
+.chart text { font-family: var(--font-display); }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 18px; font-family: var(--font-display); font-size: var(--step--1); color: var(--ink-2); margin: 4px 0 6px; }
+.legend span { display: inline-flex; align-items: center; gap: 7px; }
+.legend i { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
+.tip { position: fixed; z-index: 20; pointer-events: none; background: var(--tip-bg); color: var(--tip-fg); font-family: var(--font-display); font-size: 0.82rem; line-height: 1.35; padding: 7px 9px; border-radius: 6px; max-width: 260px; transform: translate(-50%, calc(-100% - 10px)); }
+.table-wrap { overflow-x: auto; margin: 14px 0 22px; }
+table { border-collapse: collapse; font-family: var(--font-display); font-size: 0.88rem; font-variant-numeric: tabular-nums; width: 100%; }
+th { text-align: left; font-weight: 600; color: var(--ink-2); border-bottom: 1px solid var(--axis); padding: 6px 10px 6px 0; vertical-align: bottom; }
+td { border-bottom: 1px solid var(--rule); padding: 6px 10px 6px 0; vertical-align: top; }
+td.num, th.num { text-align: right; white-space: nowrap; }
+tr.em td { font-weight: 600; }
+.note { font-size: var(--step--1); color: var(--ink-2); }
+.callout { border-left: 3px solid var(--accent); padding: 4px 0 4px 14px; margin: 18px 0; max-width: 68ch; }
+pre.cmd { background: var(--panel); border-radius: 8px; padding: 12px 14px; overflow-x: auto; font-family: var(--font-mono); font-size: 0.84rem; line-height: 1.5; }
+ul.tight { margin: 0 0 14px; padding-left: 20px; }
+ul.tight li { margin-bottom: 6px; }
+footer { margin-top: 56px; padding-top: 16px; border-top: 1px solid var(--rule); font-size: var(--step--1); color: var(--ink-2); }
+@media (max-width: 520px) { :root { --step-3: 2.05rem; --step-2: 1.35rem; } .tile-value { font-size: 1.8rem; } }
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }
+</style>
+
+<div class="page">
+  <header>
+    <div class="eyebrow">Zindi · Bias Bounty Mapping Equity Challenge · Writeup</div>
+    <h1>The Track Gap</h1>
+    <p class="dek">On Arizona's reservations, many homes are reached only by roads that Overture classes as <code>track</code>. The challenge's escape-route road layer leaves that class out and the automated road metric never looks below named highways, so these homes drop off the network in both. Part B documents the label-free model behind our leaderboard submissions.</p>
+    <div class="meta">
+      <span>Zindi username / team: <b class="fill-in">to fill in</b></span>
+      <span>Submissions: <b class="fill-in">IDs to fill in</b></span>
+      <span>Entered for: <b>Best Bias Discovery</b> and <b>Best Documentation</b></span>
+      <span>19 October 2026</span>
+    </div>
+    <nav aria-label="Contents">
+      <div><a href="#part-a"><b>Part A — Bias discovery</b></a>
+        <ol><li><a href="#a1">The pattern</a></li><li><a href="#a2">Why the scorecard cannot see it</a></li><li><a href="#a3">Evidence</a></li><li><a href="#a4">Who is affected</a></li><li><a href="#a5">Reproduce it</a></li><li><a href="#a6">Limits</a></li></ol></div>
+      <div><a href="#part-b"><b>Part B — Methodology</b></a>
+        <ol><li><a href="#b1">Approach</a></li><li><a href="#b2">Data</a></li><li><a href="#b3">Components</a></li><li><a href="#b4">Calibration evidence</a></li><li><a href="#b5">Edge cases</a></li><li><a href="#b6">Versions and scores</a></li><li><a href="#b7">Reproducibility</a></li></ol></div>
+    </nav>
+  </header>
+
+  <section class="part" id="part-a">
+    <div class="part-label"><div class="eyebrow">Part A</div><span class="pill">Best Bias Discovery</span></div>
+    <h2>Homes reached only by roads the escape-route layer drops</h2>
+
+    <div class="prose" id="a1">
+      <h3>A1. The pattern</h3>
+      <p>The challenge ships a scored road layer, <code>&lt;region&gt;-overture-roads.parquet</code>. It keeps the drivable classes motorway, trunk, primary, secondary, tertiary, residential and unclassified ("escape-route framing"). The unfiltered extract of the same Overture release shows what that filter drops: mostly <code>track</code> and <code>service</code>.</p>
+      <p>Overture inherits these classes from OpenStreetMap. There, a dirt road is often tagged <code>track</code> whatever it serves. On the Navajo Nation and the other Arizona reservations in the package, those dirt roads are the public roads that reach people's homes. For a deterministic 10 % sample of Overture building footprints, we measured the distance to the nearest road of each class group. Many structures on reservations have a <code>track</code> within 100 m and no road of the escape-route layer at all. Off-reservation tracts of the same rurality rarely look like that.</p>
+    </div>
+
+    <div class="tiles" role="list">
+      <div class="tile" role="listitem"><div class="tile-value">19.5 %</div><div class="tile-label">of sampled Navajo Nation structures have a track within 100 m and no escape-route road (1,506 footprints, 7 tracts)</div></div>
+      <div class="tile" role="listitem"><div class="tile-value">19×</div><div class="tile-label">the off-reservation rate in metropolitan Arizona: 7.5 % of structures on reservation tracts against 0.4 %</div></div>
+      <div class="tile" role="listitem"><div class="tile-value">199 km</div><div class="tile-label">of the Tohono O'odham Nation's numbered Indian Routes classed <code>track</code>, 18 % of 1,111 km (San Carlos: 46 %)</div></div>
+    </div>
+
+    <div class="prose" id="a2">
+      <h3>A2. Why the automated scorecard cannot see it</h3>
+      <p>The scorecard's road metric compares Overture motorway to secondary against TIGER S1100 and S1200, so it only covers named highways. On these reservations the highways are there. Overture's named-class length is 1.0 to 2.0 times its route-numbered highway length, the network TIGER scores against, so the metric reports little or no road gap. The access roads sit below the highway classes, outside the metric. Classed <code>track</code>, they are also outside the escape-route layer.</p>
+      <p>The pattern is therefore invisible in all five scorecard metrics and in every predefined stratum. Tribal against non-tribal road equity looks fine, because the measured roads are fine.</p>
+    </div>
+
+    <div id="a3">
+      <div class="prose">
+        <h3>A3. Evidence</h3>
+        <p><b>Method.</b> Everything below comes from the challenge data, with these definitions:</p>
+        <ul class="tight">
+          <li>Footprints: every Overture footprint whose <code>id</code> hashes to 0 mod 10.</li>
+          <li>For each footprint, the nearest vehicle road in three groups, using the unfiltered road extract: escape-route classes, <code>track</code>, and other excluded vehicle classes (<code>service</code>, <code>living_street</code>, <code>unknown</code>).</li>
+          <li>A structure counts as <em>track-only</em> when no escape-route road lies within 100 m but a track does.</li>
+          <li>A tract counts as reservation or trust land when at least half its area lies in a legal AIANNH area (strata <code>tribal_legal_pct</code>).</li>
+          <li>Rurality: USDA RUCA 2020 (metro 1–3, micropolitan 4–6, small town 7–9, rural 10).</li>
+        </ul>
+      </div>
+
+      <figure>
+        <figcaption><span class="ftitle">Arizona: structures reached only by a track, by rurality</span>Share of sampled footprints with a track within 100 m and no escape-route road. Reservation tracts sit above off-reservation tracts in every rurality class; the gap is widest where the surrounding area is metropolitan or a small town.</figcaption>
+        <div class="legend" aria-hidden="true"><span><i style="background:var(--series-1)"></i>Reservation or trust land</span><span><i style="background:var(--series-2)"></i>Non-tribal</span></div>
+        <div class="chart" id="chart-rural" role="img" aria-label="Grouped bar chart; the same values are in the table below."></div>
+      </figure>
+
+      <div class="table-wrap"><table>
+        <thead><tr><th>Arizona, RUCA class</th><th>Group</th><th class="num">Tracts</th><th class="num">Population</th><th class="num">Track share of road km</th><th class="num">No escape-route road ≤ 100 m</th><th class="num">Track-only ≤ 100 m</th><th class="num">Track-only ≤ 200 m</th></tr></thead>
+        <tbody>
+          <tr class="em"><td>Metro</td><td>Reservation</td><td class="num">7</td><td class="num">22,654</td><td class="num">68.1 %</td><td class="num">34.8 %</td><td class="num">7.5 %</td><td class="num">8.5 %</td></tr>
+          <tr><td></td><td>Non-tribal</td><td class="num">1,412</td><td class="num">6,054,111</td><td class="num">28.9 %</td><td class="num">6.7 %</td><td class="num">0.4 %</td><td class="num">0.3 %</td></tr>
+          <tr class="em"><td>Micropolitan</td><td>Reservation</td><td class="num">1</td><td class="num">4,720</td><td class="num">67.8 %</td><td class="num">18.8 %</td><td class="num">7.1 %</td><td class="num">3.5 %</td></tr>
+          <tr><td></td><td>Non-tribal</td><td class="num">71</td><td class="num">260,433</td><td class="num">54.5 %</td><td class="num">13.2 %</td><td class="num">2.4 %</td><td class="num">2.5 %</td></tr>
+          <tr class="em"><td>Small town</td><td>Reservation</td><td class="num">3</td><td class="num">12,104</td><td class="num">67.9 %</td><td class="num">30.0 %</td><td class="num">12.0 %</td><td class="num">14.5 %</td></tr>
+          <tr><td></td><td>Non-tribal</td><td class="num">25</td><td class="num">67,404</td><td class="num">44.4 %</td><td class="num">8.9 %</td><td class="num">0.9 %</td><td class="num">0.8 %</td></tr>
+          <tr class="em"><td>Rural</td><td>Reservation</td><td class="num">14</td><td class="num">45,173</td><td class="num">63.2 %</td><td class="num">32.8 %</td><td class="num">11.9 %</td><td class="num">10.3 %</td></tr>
+          <tr><td></td><td>Non-tribal</td><td class="num">60</td><td class="num">139,895</td><td class="num">58.6 %</td><td class="num">29.1 %</td><td class="num">4.8 %</td><td class="num">4.7 %</td></tr>
+        </tbody>
+      </table></div>
+
+      <figure>
+        <figcaption><span class="ftitle">Structures reached only by a track, by reservation</span>Share of sampled footprints with a track within 100 m and no escape-route road, all reservations and trust lands in the package. The rule marks non-tribal rural Arizona (4.8 %).</figcaption>
+        <div class="chart" id="chart-res" role="img" aria-label="Bar chart by reservation; the same values are in the table below."></div>
+      </figure>
+
+      <div class="table-wrap"><table>
+        <thead><tr><th>Reservation</th><th class="num">Tracts</th><th class="num">Population</th><th class="num">Sampled structures</th><th class="num">Track-only ≤ 100 m</th><th class="num">Est. structures track-only</th><th class="num">Named / numbered highway km</th><th class="num">SVI (median)</th><th class="num">Wildfire hazard rank in region</th></tr></thead>
+        <tbody>
+          <tr class="em"><td>Navajo Nation (AZ)</td><td class="num">7</td><td class="num">24,161</td><td class="num">1,506</td><td class="num">19.5 %</td><td class="num">2,741</td><td class="num">1.42</td><td class="num">0.94</td><td class="num">10th pct</td></tr>
+          <tr><td>San Carlos (AZ)</td><td class="num">2</td><td class="num">10,251</td><td class="num">358</td><td class="num">9.8 %</td><td class="num">358</td><td class="num">1.33</td><td class="num">0.91</td><td class="num">97th pct</td></tr>
+          <tr><td>Tohono O'odham Nation (AZ)</td><td class="num">5</td><td class="num">11,093</td><td class="num">822</td><td class="num">9.5 %</td><td class="num">802</td><td class="num">1.61</td><td class="num">0.92</td><td class="num">42nd pct</td></tr>
+          <tr><td>Gila River (AZ)</td><td class="num">4</td><td class="num">14,081</td><td class="num">539</td><td class="num">5.0 %</td><td class="num">263</td><td class="num">1.67</td><td class="num">0.87</td><td class="num">94th pct</td></tr>
+          <tr><td>Spokane (WA)</td><td class="num">1</td><td class="num">2,541</td><td class="num">193</td><td class="num">4.1 %</td><td class="num">74</td><td class="num">1.00</td><td class="num">0.87</td><td class="num">88th pct</td></tr>
+          <tr><td>Colville (WA)</td><td class="num">3</td><td class="num">7,804</td><td class="num">741</td><td class="num">4.0 %</td><td class="num">301</td><td class="num">1.00</td><td class="num">0.89</td><td class="num">84th pct</td></tr>
+          <tr><td>Osage (OK)</td><td class="num">13</td><td class="num">45,818</td><td class="num">3,685</td><td class="num">1.8 %</td><td class="num">693</td><td class="num">1.01</td><td class="num">0.58</td><td class="num">–</td></tr>
+          <tr><td>Pascua Pueblo Yaqui (AZ)</td><td class="num">1</td><td class="num">3,759</td><td class="num">123</td><td class="num">1.6 %</td><td class="num">19</td><td class="num">–</td><td class="num">0.99</td><td class="num">80th pct</td></tr>
+          <tr><td>Salt River (AZ)</td><td class="num">1</td><td class="num">6,334</td><td class="num">369</td><td class="num">1.4 %</td><td class="num">48</td><td class="num">2.00</td><td class="num">0.98</td><td class="num">93rd pct</td></tr>
+          <tr><td>Yakama Nation (WA)</td><td class="num">7</td><td class="num">31,101</td><td class="num">1,944</td><td class="num">1.3 %</td><td class="num">255</td><td class="num">1.93</td><td class="num">0.96</td><td class="num">46th pct</td></tr>
+          <tr><td>Fort Apache (AZ)</td><td class="num">4</td><td class="num">13,820</td><td class="num">456</td><td class="num">1.1 %</td><td class="num">54</td><td class="num">1.01</td><td class="num">0.94</td><td class="num">99th pct</td></tr>
+          <tr><td>Hoopa Valley (CA)</td><td class="num">1</td><td class="num">3,173</td><td class="num">124</td><td class="num">0.0 %</td><td class="num">0</td><td class="num">1.01</td><td class="num">0.94</td><td class="num">–</td></tr>
+          <tr><td>Fort McDowell Yavapai (AZ)</td><td class="num">1</td><td class="num">1,152</td><td class="num">49</td><td class="num">0.0 %</td><td class="num">0</td><td class="num">1.16</td><td class="num">0.80</td><td class="num">92nd pct</td></tr>
+        </tbody>
+      </table></div>
+      <p class="note prose">Estimated structures = the tract's sampled track-only share times its Overture footprint count, summed over tracts. Footprints include outbuildings. Wildfire rank: median tract percentile of USFS Wildfire Hazard Potential (strata <code>usfs_WHP_mean</code>) within the region. "Named / numbered highway km" compares Overture motorway–secondary length with Overture route-numbered highway length (Interstate, US, state), the network TIGER S1100/S1200 follows; a dash means too little numbered highway to compare.</p>
+
+      <div class="prose">
+        <p><b>The tracts.</b> Four Navajo Nation tracts carry most of the gap.</p>
+      </div>
+      <div class="table-wrap"><table>
+        <thead><tr><th>GEOID</th><th>Reservation</th><th class="num">Population</th><th class="num">No escape-route road ≤ 100 m</th><th class="num">Track-only ≤ 100 m</th><th class="num">No escape-route road ≤ 200 m</th><th class="num">Track-only ≤ 200 m</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">04017940014</td><td>Navajo Nation</td><td class="num">2,382</td><td class="num">66.9 %</td><td class="num">32.4 %</td><td class="num">49.3 %</td><td class="num">33.8 %</td></tr>
+          <tr><td class="mono">04017940015</td><td>Navajo Nation</td><td class="num">4,071</td><td class="num">70.9 %</td><td class="num">30.7 %</td><td class="num">53.3 %</td><td class="num">37.7 %</td></tr>
+          <tr><td class="mono">04001944902</td><td>Navajo Nation</td><td class="num">4,201</td><td class="num">63.3 %</td><td class="num">28.5 %</td><td class="num">41.8 %</td><td class="num">27.3 %</td></tr>
+          <tr><td class="mono">04005945100</td><td>Navajo Nation</td><td class="num">3,342</td><td class="num">72.4 %</td><td class="num">23.7 %</td><td class="num">64.6 %</td><td class="num">29.2 %</td></tr>
+          <tr><td class="mono">04021941402</td><td>Tohono O'odham Nation</td><td class="num">2,377</td><td class="num">42.0 %</td><td class="num">14.7 %</td><td class="num">26.5 %</td><td class="num">16.7 %</td></tr>
+          <tr><td class="mono">04007940400</td><td>San Carlos</td><td class="num">5,531</td><td class="num">33.0 %</td><td class="num">12.2 %</td><td class="num">10.6 %</td><td class="num">4.8 %</td></tr>
+          <tr><td class="mono">04001945100</td><td>Navajo Nation</td><td class="num">2,132</td><td class="num">24.4 %</td><td class="num">10.7 %</td><td class="num">16.8 %</td><td class="num">9.9 %</td></tr>
+          <tr><td class="mono">04019940800</td><td>Tohono O'odham Nation</td><td class="num">3,997</td><td class="num">30.4 %</td><td class="num">9.4 %</td><td class="num">12.9 %</td><td class="num">4.9 %</td></tr>
+        </tbody>
+      </table></div>
+
+      <div class="prose">
+        <p><b>Official routes classed as tracks.</b> In Overture, segments named "Indian Route 29", "Indian Route 90", "Indian Route 13", "Indian Route 9", "Indian Route 9003", "Indian Route 19" and "Indian Route 35A" are classed <code>track</code>. These are numbered public routes. Across reservation tracts, here is how the named tribal routes (Indian Route, Indian Service Route, BIA or Navajo Route plus a number) split by class:</p>
+      </div>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Reservation</th><th class="num">Named route km</th><th class="num">secondary</th><th class="num">tertiary</th><th class="num">unclassified</th><th class="num">residential</th><th class="num">service</th><th class="num">track</th><th class="num">Track share</th></tr></thead>
+        <tbody>
+          <tr><td>Navajo Nation (AZ)</td><td class="num">1,553.3</td><td class="num">158.1</td><td class="num">785.0</td><td class="num">286.7</td><td class="num">192.3</td><td class="num">13.3</td><td class="num">117.9</td><td class="num">7.6 %</td></tr>
+          <tr class="em"><td>Tohono O'odham Nation (AZ)</td><td class="num">1,111.3</td><td class="num">92.9</td><td class="num">427.4</td><td class="num">362.9</td><td class="num">28.8</td><td class="num">0.1</td><td class="num">199.2</td><td class="num">17.9 %</td></tr>
+          <tr class="em"><td>San Carlos (AZ)</td><td class="num">386.7</td><td class="num">13.3</td><td class="num">74.8</td><td class="num">91.0</td><td class="num">29.0</td><td class="num">0.0</td><td class="num">178.6</td><td class="num">46.2 %</td></tr>
+          <tr><td>Fort Apache (AZ)</td><td class="num">209.9</td><td class="num">0.0</td><td class="num">2.1</td><td class="num">67.4</td><td class="num">122.3</td><td class="num">0.0</td><td class="num">18.2</td><td class="num">8.7 %</td></tr>
+          <tr><td>Gila River (AZ)</td><td class="num">13.4</td><td class="num">0.0</td><td class="num">1.7</td><td class="num">0.0</td><td class="num">1.4</td><td class="num">0.7</td><td class="num">9.6</td><td class="num">71.7 %</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+
+    <div class="prose" id="a4">
+      <h3>A4. Who is affected and what it means</h3>
+      <p>About 4,300 structures on Arizona reservation tracts are reached only by tracks, by the sample estimate. Most are on the Navajo Nation (about 2,700), the Tohono O'odham Nation (about 800), San Carlos and Gila River. These tracts have some of the highest social vulnerability in the package: median SVI 0.87 to 0.94. San Carlos and Fort Apache rank in the top 3 % of their region for wildfire hazard potential, and Gila River and Salt River in the top 7 %.</p>
+      <p>The roads in question are public. The Navajo Nation Department of Transportation reports that the BIA and the Navajo Nation own 76 % of the Nation's 14,167 miles of road, and that 85 % of the 10,884 miles they maintain are dirt.</p>
+      <ul class="tight">
+        <li><b>Evacuation routing.</b> A route built on the escape-route layer, or on any routing profile that drops <code>track</code>, has no first segment for these homes. The nearest drivable road can be hundreds of metres to kilometres away, and the route ignores the road residents actually use. For San Carlos and Fort Apache, the reservations with the highest wildfire hazard, that is the road out during a fire.</li>
+        <li><b>Emergency dispatch.</b> Dispatch and travel-time tools that snap an address to the nearest drivable road snap these homes to the wrong road. They under-estimate the last leg on a dirt road that rain or snow can close.</li>
+        <li><b>Relief logistics.</b> Water hauling, food and medical deliveries plan stops on the same graphs. Homes beyond the drivable network fall out of the plan, or show up as unreachable.</li>
+        <li><b>Measurement.</b> Coverage audits that score named highways, this challenge's included, rate these communities as well mapped. That steers mapping effort and funding elsewhere.</li>
+      </ul>
+      <div class="callout"><p><b>What would fix it.</b> In an escape-route layer, treat a <code>track</code> or <code>service</code> segment as drivable when it is the nearest road to a building, or when it carries a public route name. Add an access metric to the scorecard (the share of structures within 100 m of the scored network), stratified by tribal status and rurality. Upstream, tagging residential dirt roads as <code>unclassified</code> or <code>residential</code> with <code>surface=unpaved</code> keeps them in routing graphs.</p></div>
+    </div>
+
+    <div class="prose" id="a5">
+      <h3>A5. Reproduce it</h3>
+      <p>Only challenge data is read: the Overture building and road extracts of release 2026-08-19.0 and the strata tables, straight from the public bucket. From the repository root:</p>
+    </div>
+    <pre class="cmd">python src/features.py && python src/roads.py      # per-tract features (also used by the model)
+python analysis/road_access.py   # distances for the 10 % footprint sample; ~10 min for AZ, OK, CA and WA
+python analysis/summarise.py     # writes analysis/out/tables.md: every table above</pre>
+
+    <div class="prose" id="a6">
+      <h3>A6. Limits</h3>
+      <ul class="tight">
+        <li>Footprints are structures, not households. Outbuildings inflate the counts but not the shares within a tract much.</li>
+        <li>A 100 m threshold suits clustered homes; homes on long driveways can be flagged in any group. That is why we report 200 m too, and compare against tracts of the same rurality rather than in absolute terms.</li>
+        <li>Some <code>track</code> tags describe the surface truthfully. The bias is in the consequence: a class rule built for farm and forest roads removes residential access roads from drivable networks.</li>
+        <li>Reservation tracts are few (25 in Arizona), so per-reservation figures rest on hundreds of sampled structures. The four Navajo Nation tracts above each show the pattern on their own.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="part" id="part-b">
+    <div class="part-label"><div class="eyebrow">Part B</div><span class="pill">Best Documentation</span></div>
+    <h2>A label-free model of the organisers' coverage-gap score</h2>
+
+    <div class="prose" id="b1">
+      <h3>B1. Approach</h3>
+      <p>No labels exist, and the reference layers the score was built from (TIGER roads, Microsoft footprints, USGS facilities, CBP establishments) were removed from the package. Rebuilding them from outside copies is prohibited. So the model treats each removed reference quantity as an unknown and draws it from a generative model conditioned on permitted features. It then applies the organisers' published formula to every draw, and submits the mean over 2,000 draws, which is the RMSE-optimal estimate under the model.</p>
+      <p>The formula: each component is <code>1 − min(1, overture / reference)</code> where a reference exists. The POI component is the mean of its defined halves (USGS facilities; all places against CBP). The score is the mean of the defined components, so draws with no defined component are discarded: the organisers dropped those tracts.</p>
+    </div>
+
+    <div id="b2">
+      <div class="prose"><h3>B2. Data</h3></div>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Input (challenge package)</th><th>Used for</th></tr></thead>
+        <tbody>
+          <tr><td>Overture buildings (bbox, upstream source)</td><td>Footprints per tract by source (OSM, Microsoft ML, Esri) and size</td></tr>
+          <tr><td>Overture roads (class, route networks, geometry)</td><td>Length per tract by class and route network, inside and along the boundary</td></tr>
+          <tr><td>Overture places (category, postcode)</td><td>Counts per facility category; ZIP membership of tracts</td></tr>
+          <tr><td>ACS housing units (B25001)</td><td>Address weights (variant v2a)</td></tr>
+          <tr><td>Strata tracts and table (2020 tracts, population, RUCA, USFS building count)</td><td>Tract polygons and covariates</td></tr>
+        </tbody>
+      </table></div>
+      <p class="note prose">Outside facts, all general or documented: the national CBP rate of about 0.024 establishments per resident; the organisers' README and challenge statement; and two schema details of the removed layers: the CBP columns (<code>cbp_estab</code>, <code>cbp_estab_res</code>, <code>cbp_estab_bus</code>) and the Microsoft columns (<code>height, confidence</code>), as described in a public repository (<a href="https://github.com/theerealhenry/Mapping-Equity-Coverage-Gaps">theerealhenry/Mapping-Equity-Coverage-Gaps</a>). These are column names only: no value, code or data from that repository was used. Both hypotheses were then tested, on the leaderboard (v2a against v2b) or against the challenge data. No TIGER, Microsoft, HIFLD/USGS or CBP data was read.</p>
+    </div>
+
+    <div class="prose" id="b3">
+      <h3>B3. Components</h3>
+      <ul class="tight">
+        <li><b>Roads.</b> TIGER S1100+S1200 length is proxied by Overture roads carrying an Interstate, US or state route number, and state subsystems such as Loop, Spur and Business. Each tract counts roads inside it <em>plus</em> numbered roads running along its boundary within 25 m, because TIGER roads that form a tract boundary count for both tracts. Texas FM/RM roads and Oklahoma county roads enter with probabilities 0.1 and 0.4 (see B4). Overture length is computed exactly as specified (motorway to secondary).</li>
+        <li><b>Buildings.</b> The removed Microsoft layer had <code>height, confidence</code>: it is the Global ML release that Overture itself conflates (version 2025-02-25). So the reference equals the ML footprints Overture kept plus <i>r</i> × its OSM and Esri footprints. Here <i>r</i>, the ML footprints each OSM footprint replaced, is inferred from the strata USFS building count. In 678 ML-only tracts, that count tracks ML with a median log ratio of −0.007 and an sd of 0.146.</li>
+        <li><b>Facilities.</b> For fire stations, EMS and schools:
+          <ul class="tight">
+            <li>the real count is drawn as Poisson;</li>
+            <li>Overture detects each facility with probability <i>p<sub>o</sub></i>, adds duplicates and false positives;</li>
+            <li>USGS records each facility with probability <i>p<sub>h</sub></i>;</li>
+            <li>the real count is drawn from its exact posterior given the Overture count.</li>
+          </ul>
+          The implied Overture/reference ratios are 0.84, 1.2 and 1.6, consistent with "EMS close to 1:1, fire stations carry the component".</li>
+        <li><b>Establishments.</b> ZIP establishments are split over tracts by business-address share. They are proxied from Overture places and large footprints, with ZIPs rebuilt from place postcodes (97 % carry one).</li>
+      </ul>
+    </div>
+
+    <div id="b4">
+      <div class="prose">
+        <h3>B4. Calibration evidence without labels</h3>
+        <p>The organisers published the share of tracts with at least one undefined component per region. In practice that is the share with no TIGER highway. The road proxy reproduces all four:</p>
+      </div>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Region</th><th class="num">Model</th><th class="num">Published</th><th class="num">Without boundary roads</th><th class="num">All Texas FM roads</th></tr></thead>
+        <tbody>
+          <tr><td>Eastern Oklahoma</td><td class="num">21.0 %</td><td class="num">21 %</td><td class="num">23.6 %</td><td class="num">–</td></tr>
+          <tr><td>Northern California</td><td class="num">36.5 %</td><td class="num">37 %</td><td class="num">39.6 %</td><td class="num">–</td></tr>
+          <tr><td>South-Central Texas</td><td class="num">27.6 %</td><td class="num">28 %</td><td class="num">29.4 %</td><td class="num">18 %</td></tr>
+          <tr><td>Maricopa</td><td class="num">54.2 %</td><td class="num">55 %</td><td class="num">56.4 %</td><td class="num">–</td></tr>
+        </tbody>
+      </table></div>
+      <p class="prose">The published Overture/TIGER length ratio of 0.71 to 1.59 cannot hold for Oklahoma with highways alone (0.99 in our proxy). Reaching 0.71 needs about 40 % of Oklahoma's county-road length in TIGER, which sets that probability.</p>
+    </div>
+
+    <div id="b5">
+      <div class="prose"><h3>B5. Edge cases</h3></div>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Case</th><th class="num">Tracts</th><th>Handling</th></tr></thead>
+        <tbody>
+          <tr><td>No Overture data at all (Texas water tracts 48039990000, 48057990000)</td><td class="num">2</td><td>They are scored, so some reference exists; with nothing in Overture every defined component is a full gap: score 1.</td></tr>
+          <tr><td>Zero population</td><td class="num">27</td><td>No special case: the business-address proxy stays positive, so the CBP reference is still drawn.</td></tr>
+          <tr><td>Zero housing units</td><td class="num">82</td><td>Only enters the address-weight variant.</td></tr>
+          <tr><td>No named-class Overture road</td><td class="num">137</td><td>Road gap 1 when TIGER is drawn as present, otherwise undefined.</td></tr>
+          <tr><td>Water-dominated tracts</td><td class="num">2 scored</td><td>The organisers dropped 7 others; the two left are the no-data tracts above.</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+
+    <div id="b6">
+      <div class="prose">
+        <h3>B6. Versions and public scores</h3>
+        <p>Each version is a complete candidate model; later ones change one assumption at a time, so each score answers one question.</p>
+      </div>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Version</th><th>Change</th><th class="num">Public RMSE</th></tr></thead>
+        <tbody>
+          <tr><td>v1</td><td>USFS count as the building reference; CBP as 0.024 × population</td><td class="num">0.11303</td></tr>
+          <tr><td>v2a</td><td>Structural building model; CBP split by total address share per ZIP</td><td class="num">0.10041</td></tr>
+          <tr class="em"><td>v2b</td><td>Structural building model; CBP split by business address share</td><td class="num">0.07670</td></tr>
+          <tr class="em"><td>v3d</td><td>v2b with a business proxy linear in places plus urban warehouses</td><td class="num">0.07291</td></tr>
+          <tr><td>v3e</td><td>v2b without Oklahoma county roads in TIGER</td><td class="num">0.07853</td></tr>
+          <tr><td>v6</td><td>v3d, plus the two no-data water tracts set to 1</td><td class="num">0.07231</td></tr>
+          <tr class="em"><td>v7</td><td>v6 with 60 % of Oklahoma county-road length in TIGER (instead of 40 %)</td><td class="num">0.07182</td></tr>
+          <tr><td>v8</td><td>v6 with less tract-level noise on CBP establishments (0.3 instead of 0.5)</td><td class="num">0.07222</td></tr>
+          <tr class="em"><td>v9</td><td>v6 with Overture finding more schools (detection 0.93, fewer school gaps)</td><td class="num">0.07184</td></tr>
+          <tr class="em"><td>v10</td><td>v6 with the changes of v7, v8 and v9 together</td><td class="num">0.07157</td></tr>
+        </tbody>
+      </table></div>
+      <p class="prose">Two single-factor tests settled open questions. v3d beat v2b: the concave business proxy had put CBP gaps in residential tracts with few places, where business addresses are few too. v3e lost to v2b: removing Oklahoma's county roads from TIGER hurt the score. That confirms, on the leaderboard, what the organisers' 0.71 Overture/TIGER ratio implied without any labels.</p>
+      <p class="prose">Considered and rejected:</p>
+      <ul class="tight prose">
+        <li>roads without the boundary band, which contradicts the published shares;</li>
+        <li>all Texas FM roads as S1200, which gives 18 % against 28 %;</li>
+        <li>a physical fire-station prior, which implies 480 to 1,070 stations for Maricopa against about 300;</li>
+        <li>parameter averaging over plausible ranges, kept in the code but changing predictions by 0.004 RMS only.</li>
+      </ul>
+    </div>
+
+    <div class="prose" id="b7">
+      <h3>B7. Reproducibility</h3>
+      <p>The repository holds <code>run_all.sh</code>, <code>requirements.txt</code> (duckdb 1.5.6, numpy 2.5.4, pandas 3.0.6, pyarrow 26.0.0, scikit-learn 1.9.1, scipy 1.18.1) and a README that follows Zindi's documentation guide. A clean run from an empty directory and a fresh environment takes 18 minutes on a 20-thread laptop: features 264 s, roads 540 s, postcodes and sizes 217 s, model 17 s per version. It reproduces the features exactly. Every model component has its own seeded random stream (seed 2026).</p>
+    </div>
+    <pre class="cmd">python -m venv .venv && .venv/bin/pip install -r requirements.txt
+PYTHON=.venv/bin/python ./run_all.sh v2b      # submissions/v2b.csv in the sample-submission layout</pre>
+  </section>
+
+  <footer>
+    <p><b>Sources.</b> Challenge data: <a href="https://source.coop/humane-intelligence/bias-bounty-mapping-equity-challenge">source.coop/humane-intelligence/bias-bounty-mapping-equity-challenge</a> (Overture release 2026-08-19.0; Overture © Overture Maps Foundation and contributors, ODbL / CDLA Permissive 2.0). Context: Navajo Nation Council, press release of 10 December 2019 on NDOT's report to the Budget and Finance Committee, <a href="https://www.navajonationcouncil.org/wp-content/uploads/2020/09/Budget_and_Finance_receives_reports_takes_action_PR.pdf">navajonationcouncil.org</a>, retrieved 19 October 2026.</p>
+  </footer>
+</div>
+
+<div class="tip" id="tip" hidden></div>
+
+<script>
+(function () {
+  const css = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  const tip = document.getElementById("tip");
+  const pct = (v) => (v * 100).toFixed(1) + " %";
+  const NS = "http://www.w3.org/2000/svg";
+  const el = (tag, attrs, parent) => { const n = document.createElementNS(NS, tag); for (const k in attrs) n.setAttribute(k, attrs[k]); if (parent) parent.appendChild(n); return n; };
+
+  // Horizontal bars with a 4px rounded data-end, square at the baseline.
+  function barPath(x0, y, w, h) {
+    const r = Math.min(4, w / 2, h / 2);
+    if (w <= 0) return "";
+    return `M${x0},${y}H${x0 + w - r}Q${x0 + w},${y} ${x0 + w},${y + r}V${y + h - r}Q${x0 + w},${y + h} ${x0 + w - r},${y + h}H${x0}Z`;
+  }
+
+  function showTip(evt, html) {
+    tip.innerHTML = html; tip.hidden = false;
+    const half = Math.min(130, tip.offsetWidth / 2 + 8);
+    tip.style.left = Math.min(Math.max(evt.clientX, half), window.innerWidth - half) + "px";
+    tip.style.top = evt.clientY + "px";
+  }
+  function hideTip() { tip.hidden = true; }
+
+  function draw(host, cfg) {
+    host.innerHTML = "";
+    const W = Math.max(320, host.clientWidth || 640);
+    const labelW = Math.min(cfg.labelW, W * 0.42);
+    const right = 54, top = 6, axisH = 22;
+    const barH = cfg.barH, inner = 2;
+    const groupH = cfg.series.length * barH + (cfg.series.length - 1) * inner;
+    const gap = cfg.groupGap;
+    const H = top + cfg.rows.length * (groupH + gap) - gap + axisH + 6;
+    const svg = el("svg", { viewBox: `0 0 ${W} ${H}`, width: W, height: H }, host);
+    const x = (v) => labelW + (v / cfg.max) * (W - labelW - right);
+    const plotBottom = top + cfg.rows.length * (groupH + gap) - gap;
+    for (const t of cfg.ticks) {
+      el("line", { x1: x(t), x2: x(t), y1: top - 2, y2: plotBottom + 2, stroke: css("--grid"), "stroke-width": 1 }, svg);
+      const tx = el("text", { x: x(t), y: plotBottom + 17, "text-anchor": "middle", "font-size": 11, fill: css("--muted") }, svg);
+      tx.textContent = (t * 100).toFixed(0) + " %";
+    }
+    if (cfg.reference) {
+      const rx = x(cfg.reference.value);
+      el("line", { x1: rx, x2: rx, y1: top - 2, y2: plotBottom + 2, stroke: css("--ink-2"), "stroke-width": 1.5 }, svg);
+    }
+    el("line", { x1: labelW, x2: labelW, y1: top - 2, y2: plotBottom + 2, stroke: css("--axis"), "stroke-width": 1 }, svg);
+    cfg.rows.forEach((row, i) => {
+      const y0 = top + i * (groupH + gap);
+      const lab = el("text", { x: labelW - 10, y: y0 + groupH / 2 + 4, "text-anchor": "end", "font-size": 12.5, fill: css("--ink") }, svg);
+      lab.textContent = row.label;
+      cfg.series.forEach((s, j) => {
+        const v = row.values[j];
+        const y = y0 + j * (barH + inner);
+        const w = Math.max(0, x(v) - labelW);
+        if (w > 0) el("path", { d: barPath(labelW, y, w, barH), fill: css(s.color) }, svg);
+        const val = el("text", { x: labelW + w + 6, y: y + barH / 2 + 4, "font-size": 11.5, fill: css("--ink-2") }, svg);
+        val.textContent = pct(v);
+        const hit = el("rect", { x: labelW, y: y - 1, width: W - labelW - right + right, height: barH + 2, fill: "transparent" }, svg);
+        const html = `<b>${row.label}</b>${cfg.series.length > 1 ? " · " + s.name : ""}<br>${pct(v)} of ${row.n[j].toLocaleString("en-US")} sampled structures` + (row.tracts ? ` (${row.tracts[j]} tract${row.tracts[j] === 1 ? "" : "s"})` : "");
+        hit.addEventListener("mousemove", (e) => showTip(e, html));
+        hit.addEventListener("mouseleave", hideTip);
+      });
+    });
+  }
+
+  const rural = {
+    labelW: 120, barH: 16, groupGap: 16, max: 0.15, ticks: [0, 0.05, 0.10, 0.15],
+    series: [{ name: "Reservation or trust land", color: "--series-1" }, { name: "Non-tribal", color: "--series-2" }],
+    rows: [
+      { label: "Metro", values: [0.075, 0.004], n: [1097, 247381], tracts: [7, 1412] },
+      { label: "Micropolitan", values: [0.071, 0.024], n: [170, 17028], tracts: [1, 71] },
+      { label: "Small town", values: [0.120, 0.009], n: [640, 6918], tracts: [3, 25] },
+      { label: "Rural", values: [0.119, 0.048], n: [2315, 15462], tracts: [14, 60] },
+    ],
+  };
+  const res = {
+    labelW: 150, barH: 14, groupGap: 9, max: 0.20, ticks: [0, 0.05, 0.10, 0.15, 0.20],
+    series: [{ name: "Track-only", color: "--series-1" }],
+    reference: { value: 0.048 },
+    rows: [
+      ["Navajo Nation (AZ)", 0.195, 1506, 7], ["San Carlos (AZ)", 0.098, 358, 2], ["Tohono O'odham (AZ)", 0.095, 822, 5],
+      ["Gila River (AZ)", 0.050, 539, 4], ["Spokane (WA)", 0.041, 193, 1], ["Colville (WA)", 0.040, 741, 3],
+      ["Osage (OK)", 0.018, 3685, 13], ["Pascua Yaqui (AZ)", 0.016, 123, 1], ["Salt River (AZ)", 0.014, 369, 1],
+      ["Yakama (WA)", 0.013, 1944, 7], ["Fort Apache (AZ)", 0.011, 456, 4], ["Hoopa Valley (CA)", 0.0, 124, 1],
+      ["Fort McDowell (AZ)", 0.0, 49, 1],
+    ].map(([label, v, n, t]) => ({ label, values: [v], n: [n], tracts: [t] })),
+  };
+
+  const charts = [[document.getElementById("chart-rural"), rural], [document.getElementById("chart-res"), res]];
+  const render = () => charts.forEach(([host, cfg]) => draw(host, cfg));
+  render();
+  let timer;
+  window.addEventListener("resize", () => { clearTimeout(timer); timer = setTimeout(render, 120); });
+  if (window.matchMedia) {
+    const mq = window.matchMedia("(prefers-color-scheme: dark)");
+    if (mq.addEventListener) mq.addEventListener("change", render);
+  }
+  new MutationObserver(render).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+})();
+</script>
+
+</body></html>
